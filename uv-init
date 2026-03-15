@@ -1,0 +1,151 @@
+#!/bin/bash
+# uv-init: 初始化 Python 项目并自动添加配置文件
+
+USE_LIB=false
+PROJECT_NAME=""
+PYTHON_VERSION=""
+
+# Show usage information
+show_usage() {
+    echo "Usage: uv-init [--lib] [--python version] [project-name]"
+    exit 0
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --lib)
+            USE_LIB=true
+            shift
+            ;;
+        --python)
+            PYTHON_VERSION="$2"
+            shift 2
+            ;;
+        --help|-h)
+            show_usage
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            show_usage
+            ;;
+        *)
+            PROJECT_NAME="$1"
+            shift
+            ;;
+    esac
+done
+
+# If no project name provided, show usage
+if [ -z "$PROJECT_NAME" ]; then
+    show_usage
+fi
+
+# Calculate package name (uv init --lib converts hyphens to underscores)
+PKG_NAME="${PROJECT_NAME//-/_}"
+
+# Create project
+cd "$(pwd)"
+
+# If using lib layout, create library project with --lib
+if [ "$USE_LIB" = true ]; then
+    if [ -n "$PYTHON_VERSION" ]; then
+        uv init --lib --python "$PYTHON_VERSION" "$PROJECT_NAME"
+    else
+        uv init --lib "$PROJECT_NAME"
+    fi
+else
+    if [ -n "$PYTHON_VERSION" ]; then
+        uv init --python "$PYTHON_VERSION" "$PROJECT_NAME"
+    else
+        uv init "$PROJECT_NAME"
+    fi
+fi
+
+cd "$PROJECT_NAME"
+
+# Set version variables
+PY_VERSION="${PYTHON_VERSION:-3.13}"
+TARGET_VERSION="${PYTHON_VERSION:+py${PYTHON_VERSION//./}}"
+TARGET_VERSION="${TARGET_VERSION:-py313}"
+
+# Create .vscode directory
+mkdir -p .vscode
+
+# Create settings.json
+cat > .vscode/settings.json << 'VSCODEEOF'
+{
+    "python.venvPath": ".",
+    "python.venvFolder": ".venv",
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports.ruff": "explicit",
+            "source.fixAll.ruff": "explicit"
+        }
+    }
+}
+VSCODEEOF
+
+# Create pyrightconfig.json
+cat > pyrightconfig.json << PYRIGHTEOF
+{
+  "pythonVersion": "$PY_VERSION",
+  "typeCheckingMode": "standard",
+  "reportMissingImports": false,
+  "reportUndefinedVariable": false,
+  "reportMissingTypeStubs": true,
+  "reportGeneralTypeIssues": true
+}
+PYRIGHTEOF
+
+# Append Ruff configuration to pyproject.toml
+if [ "$USE_LIB" = true ]; then
+cat >> pyproject.toml << RUFFEOF
+
+[tool.ruff]
+line-length = 88
+target-version = "$TARGET_VERSION"
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F", "I", "N", "UP", "B", "A", "C4", "T20", "SIM", "ARG", "PTH"
+]
+fixable = ["ALL"]
+ignore = ["E501", "T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/$PKG_NAME"]
+RUFFEOF
+else
+cat >> pyproject.toml << RUFFEOF
+
+[tool.ruff]
+line-length = 88
+target-version = "$TARGET_VERSION"
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F", "I", "N", "UP", "B", "A", "C4", "T20", "SIM", "ARG", "PTH"
+]
+fixable = ["ALL"]
+ignore = ["E501", "T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+RUFFEOF
+fi
+
+echo "✅ Project '$PROJECT_NAME' initialized successfully!"
+if [ "$USE_LIB" = true ]; then
+    echo "   - 📁 lib layout enabled"
+fi
+echo "   - Ruff configuration added to pyproject.toml"
+echo "   - Pyright configuration added"
+echo "   - VS Code settings added"
