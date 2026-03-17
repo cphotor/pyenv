@@ -1,0 +1,132 @@
+#!/bin/bash
+# pydev: Configure development environment for Python projects with Windsurf/VS Code settings
+
+PROJECT_DIR="."
+
+# Show usage information
+show_usage() {
+    echo "Usage: pydev [project-directory]"
+    echo "  project-directory   Target directory (default: current directory)"
+    exit 0
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --help|-h)
+            show_usage
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            show_usage
+            ;;
+        *)
+            PROJECT_DIR="$1"
+            shift
+            ;;
+    esac
+done
+
+# Validate project directory
+if [ ! -d "$PROJECT_DIR" ]; then
+    echo "Error: Directory '$PROJECT_DIR' does not exist."
+    echo "Please create the project first with: uv init [project-name] or python -m venv .venv"
+    exit 1
+fi
+
+# Change to project directory
+cd "$PROJECT_DIR"
+
+# Extract Python version from uv project
+if [ -f "pyproject.toml" ]; then
+    # Try to read Python version from pyproject.toml requires-python field
+    PYTHON_VERSION=$(grep -E 'requires-python\s*=\s*"[^"]*"' pyproject.toml | sed -E 's/.*>=([0-9\.]+).*/\1/' | head -1)
+    
+    # If not found in requires-python, try to extract from .python-version file
+    if [ -z "$PYTHON_VERSION" ] && [ -f ".python-version" ]; then
+        PYTHON_VERSION=$(cat .python-version)
+    fi
+    
+    # If still not found, try to get from uv python list (active version)
+    if [ -z "$PYTHON_VERSION" ] && command -v uv &> /dev/null; then
+        PYTHON_VERSION=$(uv python list 2>/dev/null | grep '\*' | awk '{print $2}' | head -1)
+    fi
+    
+    # Default to 3.13 if still not found
+    if [ -z "$PYTHON_VERSION" ]; then
+        PYTHON_VERSION="3.13"
+        echo "Warning: Could not detect Python version, using default 3.13"
+    else
+        echo "Detected Python version: $PYTHON_VERSION"
+    fi
+else
+    echo "Error: pyproject.toml not found. Please run this in a Python project directory."
+    exit 1
+fi
+
+# Set version variables
+PY_VERSION="$PYTHON_VERSION"
+TARGET_VERSION="py${PYTHON_VERSION//./}"
+
+# Create .vscode directory
+mkdir -p .vscode
+
+# Create settings.json
+cat > .vscode/settings.json << 'VSCODEEOF'
+{
+    "python.venvPath": ".",
+    "python.venvFolder": ".venv",
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports.ruff": "explicit",
+            "source.fixAll.ruff": "explicit"
+        }
+    }
+}
+VSCODEEOF
+
+# Create pyrightconfig.json
+cat > pyrightconfig.json << PYRIGHTEOF
+{
+  "pythonVersion": "$PY_VERSION",
+  "typeCheckingMode": "standard",
+  "reportMissingImports": false,
+  "reportUndefinedVariable": false,
+  "reportMissingTypeStubs": true,
+  "reportGeneralTypeIssues": true
+}
+PYRIGHTEOF
+
+# Append Ruff configuration to pyproject.toml
+if [ -f pyproject.toml ]; then
+cat >> pyproject.toml << RUFFEOF
+
+[tool.ruff]
+line-length = 88
+target-version = "$TARGET_VERSION"
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F", "I", "N", "UP", "B", "A", "C4", "T20", "SIM", "ARG", "PTH"
+]
+fixable = ["ALL"]
+ignore = ["E501", "T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+RUFFEOF
+else
+    echo "Warning: pyproject.toml not found. Please run this in a Python project directory."
+fi
+
+echo "✅ Development environment configured for '$(basename "$PROJECT_DIR")'!"
+echo "   - Ruff configuration added to pyproject.toml"
+echo "   - Pyright configuration added"
+echo "   - VS Code/Windsurf settings added"
+echo ""
+echo "📋 Required plugins for VS Code:"
+echo "   - Ruff: charliermarsh.ruff"
+echo "   - Pylance: ms-python.vscode-pylance"

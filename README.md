@@ -1,32 +1,31 @@
-# uv-init
+# pydev
 
-An enhanced Python project initialization script based on the `uv` tool that automatically sets up a complete development environment.
+A Python development environment configuration script that automatically sets up a complete coding environment with modern tooling.
 
 ## Features
 
-- 🚀 Fast Python project creation using `uv init`
-- 📚 Support for library project layout (`--lib` option)
-- 🐍 Support for specifying Python version (`--python` option)
 - ⚙️ Automatic Ruff configuration (code formatting and linting)
 - 📝 Automatic Pyright configuration (type checking)
-- 💻 Automatic VS Code settings
-- 🎯 One-click complete development environment setup
+- 💻 Automatic VS Code/Windsurf settings
+- 🐍 Auto-detect Python version from project
+- 🎯 One-click development environment setup
+- 🔧 Works with any Python project (uv, pip, poetry, etc.)
 
 ## Installation
 
 1. Download the script:
 ```bash
-curl -O https://raw.githubusercontent.com/yourusername/uv-init/main/uv-init
+curl -O https://raw.githubusercontent.com/yourusername/pydev/main/pydev
 ```
 
 2. Make it executable:
 ```bash
-chmod +x uv-init
+chmod +x pydev
 ```
 
 3. Move to system path (optional):
 ```bash
-mv uv-init ~/.local/bin/
+mv pydev ~/.local/bin/
 ```
 
 ## Usage
@@ -34,35 +33,39 @@ mv uv-init ~/.local/bin/
 ### Basic Usage
 
 ```bash
-# Create a regular Python project
-uv-init my-project
+# Configure current directory
+pydev
 
-# Create a library project
-uv-init --lib my-library
+# Configure specific project directory
+pydev /path/to/my-project
 
-# Specify Python version
-uv-init --python 3.11 my-project
-
-# Combine options
-uv-init --lib --python 3.12 my-awesome-lib
+# Show help
+pydev --help
 ```
 
-### Command Line Options
+### Typical Workflow
 
-- `--lib`: Create library project layout (src directory structure)
-- `--python <version>`: Specify Python version
-- `--help, -h`: Show help information
+```bash
+# 1. Create a new project (using uv, pip, poetry, etc.)
+uv init my-project
+cd my-project
+
+# 2. Configure development environment
+pydev
+
+# 3. Start coding!
+```
 
 ## Automatic Configurations
 
-### 1. VS Code Configuration (`.vscode/settings.json`)
+### 1. VS Code/Windsurf Configuration (`.vscode/settings.json`)
 - Configure Python virtual environment path
 - Enable format on save
 - Set Ruff as default formatter
 - Configure auto-organize imports and fix issues on save
 
 ### 2. Pyright Configuration (`pyrightconfig.json`)
-- Set Python version
+- Auto-detect Python version from project
 - Standard type checking mode
 - Optimized error reporting configuration
 
@@ -72,24 +75,28 @@ uv-init --lib --python 3.12 my-awesome-lib
 - Comprehensive code checking rules
 - Auto-fix all fixable issues
 
-## Examples
+## Python Version Detection
 
-Create a project named `my-app`:
+The script automatically detects Python version from:
 
-```bash
-uv-init my-app
-cd my-app
-```
-
-This creates:
-- Complete Python project structure
-- Configured development environment
-- Ready-to-code environment
+1. `pyproject.toml` → `requires-python` field
+2. `.python-version` file
+3. `uv python list` (active version)
+4. Falls back to `3.13` if detection fails
 
 ## Requirements
 
-- [uv](https://github.com/astral-sh/uv): Python package management tool
 - Python 3.8+ (3.11+ recommended)
+- A Python project with `pyproject.toml`
+
+## VS Code Plugins
+
+For VS Code users, install these plugins:
+
+- **Ruff**: `charliermarsh.ruff`
+- **Pylance**: `ms-python.vscode-pylance`
+
+Windsurf users have these built-in.
 
 ## License
 
@@ -101,12 +108,12 @@ Issues and Pull Requests are welcome!
 
 ## Why choose this script?
 
-The standard `uv init` only creates basic project structure. This script adds:
+Setting up a Python development environment manually can be time-consuming. This script:
 
-1. **Out of the box**: No manual development environment setup needed
-2. **Best practices**: Pre-configured with modern Python development best practices
-3. **Tool integration**: Perfect integration with VS Code, Ruff, Pyright
-4. **Flexible configuration**: Support for different project types and Python versions
+1. **Saves time**: No manual configuration needed
+2. **Best practices**: Pre-configured with modern Python development standards
+3. **Tool integration**: Perfect integration with VS Code/Windsurf, Ruff, Pyright
+4. **Universal**: Works with any Python project setup
 
 Focus on coding, not environment configuration!
 

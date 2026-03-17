@@ -1,32 +1,31 @@
-# uv-init
+# pydev
 
-一个增强版的 Python 项目初始化脚本，基于 `uv` 工具，自动添加开发环境配置。
+一个 Python 开发环境配置脚本，自动设置完整的现代化编码环境。
 
 ## 功能特性
 
-- 🚀 基于 `uv init` 快速创建 Python 项目
-- 📚 支持库项目布局（`--lib` 选项）
-- 🐍 支持指定 Python 版本（`--python` 选项）
 - ⚙️ 自动配置 Ruff（代码格式化和检查）
 - 📝 自动配置 Pyright（类型检查）
-- 💻 自动配置 VS Code 设置
-- 🎯 一键设置完整的开发环境
+- 💻 自动配置 VS Code/Windsurf 设置
+- 🐍 从项目自动检测 Python 版本
+- 🎯 一键设置开发环境
+- 🔧 适用于任何 Python 项目（uv、pip、poetry 等）
 
 ## 安装
 
 1. 下载脚本：
 ```bash
-curl -O https://raw.githubusercontent.com/yourusername/uv-init/main/uv-init
+curl -O https://raw.githubusercontent.com/yourusername/pydev/main/pydev
 ```
 
 2. 添加执行权限：
 ```bash
-chmod +x uv-init
+chmod +x pydev
 ```
 
 3. 移动到系统路径（可选）：
 ```bash
-mv uv-init ~/.local/bin/
+mv pydev ~/.local/bin/
 ```
 
 ## 使用方法
@@ -34,35 +33,39 @@ mv uv-init ~/.local/bin/
 ### 基本用法
 
 ```bash
-# 创建普通 Python 项目
-uv-init my-project
+# 配置当前目录
+pydev
 
-# 创建库项目
-uv-init --lib my-library
+# 配置指定项目目录
+pydev /path/to/my-project
 
-# 指定 Python 版本
-uv-init --python 3.11 my-project
-
-# 组合使用
-uv-init --lib --python 3.12 my-awesome-lib
+# 显示帮助
+pydev --help
 ```
 
-### 命令行选项
+### 典型工作流程
 
-- `--lib`: 创建库项目布局（src 目录结构）
-- `--python <version>`: 指定 Python 版本
-- `--help, -h`: 显示帮助信息
+```bash
+# 1. 创建新项目（使用 uv、pip、poetry 等）
+uv init my-project
+cd my-project
+
+# 2. 配置开发环境
+pydev
+
+# 3. 开始编码！
+```
 
 ## 自动配置的内容
 
-### 1. VS Code 配置 (`.vscode/settings.json`)
+### 1. VS Code/Windsurf 配置 (`.vscode/settings.json`)
 - 配置 Python 虚拟环境路径
 - 启用保存时格式化
 - 设置 Ruff 为默认格式化工具
 - 配置保存时自动整理导入和修复问题
 
 ### 2. Pyright 配置 (`pyrightconfig.json`)
-- 设置 Python 版本
+- 从项目自动检测 Python 版本
 - 标准类型检查模式
 - 优化的错误报告配置
 
