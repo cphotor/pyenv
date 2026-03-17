@@ -91,12 +91,13 @@ The script automatically detects Python version from:
 
 ## VS Code Plugins
 
-For VS Code users, install these plugins:
-
+**For VS Code users**, we recommend installing these plugins:
 - **Ruff**: `charliermarsh.ruff`
 - **Pylance**: `ms-python.vscode-pylance`
 
-Windsurf users have these built-in.
+**For Windsurf users**, we recommend:
+- **Ruff**: `charliermarsh.ruff`
+- **Windsurf Pyright**: (built-in, but check for updates to get the latest features)
 
 ## License
 

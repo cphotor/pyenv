@@ -89,6 +89,16 @@ cd my-app
 - 配置好的开发环境
 - 可以直接开始编码的环境
 
+## VS Code 插件
+
+**VS Code 用户**推荐安装以下插件：
+- **Ruff**: `charliermarsh.ruff`
+- **Pylance**: `ms-python.vscode-pylance`
+
+**Windsurf 用户**推荐安装：
+- **Ruff**: `charliermarsh.ruff`
+- **Windsurf Pyright**: (内置，但建议检查更新以获得最新功能)
+
 ## 依赖要求
 
 - [uv](https://github.com/astral-sh/uv): Python 包管理工具
