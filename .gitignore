@@ -25,7 +25,7 @@ build/
 DEVELOPMENT.md
 PROGRESS.md
 TODO.md
-PROJECT_STATUS.md
+.project_status.md
 
 # OS
 .DS_Store
