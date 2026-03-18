@@ -72,7 +72,7 @@ uv init my-project
 cd my-project
 
 # 2. 配置开发环境（自动创建虚拟环境、安装工具链）
-./pye
+pye
 
 # 3. 开始编码！
 ```
@@ -111,20 +111,6 @@ cd my-project
 - 终端自动激活
 - Shell 启动激活以获得更好的 Copilot 支持
 
-## 示例
-
-创建一个名为 `my-project` 的项目：
-
-```bash
-uv init my-project
-cd my-project
-./pye
-```
-
-这将创建：
-- 完整的 Python 项目结构
-- 配置好的开发环境
-- 可以直接开始编码的环境
 
 ## 系统要求
 

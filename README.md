@@ -73,7 +73,7 @@ uv init my-project
 cd my-project
 
 # 2. Configure development environment (auto-creates venv and installs toolchain)
-./pye
+pye
 
 # 3. Start coding!
 ```
@@ -126,34 +126,3 @@ The script automatically detects Python version from:
 - Python 3.8+ (3.11+ recommended)
 - Bash shell environment (built-in on macOS/Linux)
 -**Required**: [uv](https://github.com/astral-sh/uv) - Modern Python package manager (used for virtual environment creation and project management)
-
-## VS Code Plugins
-
-**For VS Code users**, we recommend installing these plugins:
-- **Ruff**: `charliermarsh.ruff`
-- **Pylance**: `ms-python.vscode-pylance`
-
-**For Windsurf users**, we recommend:
-- **Ruff**: `charliermarsh.ruff`
-- **Windsurf Pyright**: (built-in, but check for updates to get the latest features)
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
-## Contributing
-
-Issues and Pull Requests are welcome!
-
-## Why choose this script?
-
-Setting up a Python development environment manually can be time-consuming. This script:
-
-1. **Saves time**: No manual configuration needed
-2. **Smart updates**: Detects and updates existing configurations without creating duplicates
-3. **Best practices**: Pre-configured with modern Python development standards
-4. **Tool integration**: Perfect integration with VS Code/Windsurf, Ruff, Pyright
-5. **Universal**: Works with any Python project setup
-6. **Idempotent**: Safe to run multiple times - always ensures correct configuration
-
-Focus on coding, not environment configuration!
