@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # pye: Configure development environment for Python projects with Windsurf/VS Code settings
-VERSION="1.1.5"
+VERSION="1.1.6"
 
 PROJECT_DIR="."
 LINE_LENGTH=88  # Default to PEP 8
@@ -172,6 +172,34 @@ if [ -f ".vscode/settings.json" ]; then
         else
             echo "   - VS Code formatting configuration already exists, skipping..."
         fi
+        
+        # Still add auto-save settings if not present
+        if ! grep -q "files.autoSave" .vscode/settings.json; then
+            if [[ "$LANG_ENV" == "zh" ]]; then
+                echo "   - 正在添加自动延时保存配置..."
+            else
+                echo "   - Adding auto-delay save configuration..."
+            fi
+            if ! jq '. + {
+                "files.autoSave": "afterDelay",
+                "files.autoSaveDelay": 1000
+            }' .vscode/settings.json > .vscode/settings.json.tmp 2>/dev/null; then
+                if [[ "$LANG_ENV" == "zh" ]]; then
+                    echo "   ⚠️ 警告：更新 settings.json 失败，跳过..."
+                else
+                    echo "   ⚠️ Warning: Failed to update settings.json, skipping..."
+                fi
+                rm -f .vscode/settings.json.tmp
+            else
+                mv .vscode/settings.json.tmp .vscode/settings.json
+            fi
+        else
+            if [[ "$LANG_ENV" == "zh" ]]; then
+                echo "   - 自动延时保存配置已存在，跳过..."
+            else
+                echo "   - Auto-delay save configuration already exists, skipping..."
+            fi
+        fi
     else
         if [[ "$LANG_ENV" == "zh" ]]; then
             echo "   - 正在添加 VS Code 格式化配置..."
@@ -183,8 +211,13 @@ if [ -f ".vscode/settings.json" ]; then
             "[python]": {
                 "editor.defaultFormatter": "charliermarsh.ruff",
                 "editor.formatOnSave": true,
-                "editor.quickFixesEnabled": true
-            }
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports.ruff": "explicit",
+                    "source.fixAll.ruff": "explicit"
+                }
+            },
+            "files.autoSave": "afterDelay",
+            "files.autoSaveDelay": 1000
         }' .vscode/settings.json > .vscode/settings.json.tmp 2>/dev/null; then
             if [[ "$LANG_ENV" == "zh" ]]; then
                 echo "   ⚠️ 警告：更新 settings.json 失败，跳过..."
@@ -207,8 +240,13 @@ else
     "[python]": {
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
-        "editor.quickFixesEnabled": true
-    }
+        "editor.codeActionsOnSave": {
+            "source.organizeImports.ruff": "explicit",
+            "source.fixAll.ruff": "explicit"
+        }
+    },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000
 }
 VSCODEEOF
 fi

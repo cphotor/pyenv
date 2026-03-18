@@ -1,6 +1,6 @@
 # pye
 
-**Version:** 1.1.5  
+**Version:** 1.1.6  
 **Language:** English | [中文](README.zh.md)
 
 A Python development environment configuration script that automatically sets up a complete coding environment with modern tooling.
@@ -10,7 +10,6 @@ A Python development environment configuration script that automatically sets up
 - ⚙️ Automatic Ruff configuration (code formatting and linting)
 - 📝 Automatic Pyright configuration (type checking)
 - 💻 Automatic VS Code/Windsurf settings
-- ✨ **Auto-fix on save** - Automatically fixes linting errors and organizes imports when saving files
 - 🔄 Smart configuration updates (no duplicates)
 - 🐍 Auto-detect Python version from project
 - 🎯 One-click development environment setup
@@ -89,6 +88,7 @@ pye
 - Python formatting with Ruff
 - Enable format on save
 - Configure auto-organize imports and fix issues on save
+- Configure auto-delay save: Automatically saves files after 1 second of modification (`files.autoSave: afterDelay`, `files.autoSaveDelay: 1000`)
 
 ### 2. VS Code/Windsurf Extensions (`.vscode/extensions.json`)
 - Auto-recommend Python extension (auto-selects Pylance/Pyright)

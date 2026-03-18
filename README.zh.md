@@ -1,6 +1,6 @@
 # pye
 
-**版本：** 1.1.5  
+**版本：** 1.1.6  
 **语言:** 中文 | [English](README.md)
 
 一个 Python 开发环境配置脚本，自动设置完整的现代化编码环境。
@@ -10,7 +10,6 @@
 - ⚙️ 自动配置 Ruff（代码格式化和检查）
 - 📝 自动配置 Pyright（类型检查）
 - 💻 自动配置 VS Code/Windsurf 设置
-- ✨ **保存时自动修复** - 保存文件时自动修复 linting 错误并整理导入
 - 🔄 智能配置更新（无重复）
 - 🐍 从项目自动检测 Python 版本
 - 🎯 一键设置开发环境
@@ -88,6 +87,7 @@ pye
 - Python 格式化配置（使用 Ruff）
 - 启用保存时格式化
 - 配置保存时自动整理导入和修复问题
+- 配置自动延时保存：修改后 1 秒自动保存文件（`files.autoSave: afterDelay`, `files.autoSaveDelay: 1000`）
 
 ### 2. VS Code/Windsurf 扩展 (`.vscode/extensions.json`)
 - 自动推荐 Python 扩展（自动选择 Pylance/Pyright）
